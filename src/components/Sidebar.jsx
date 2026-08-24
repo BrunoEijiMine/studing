@@ -23,9 +23,9 @@ const NAV_ITEMS = [
   },
 ]
 
-export default function Sidebar({ active, onChange }) {
+export default function Sidebar({ active, onChange, onLogout }) {
   return (
-    <aside className="hidden w-56 shrink-0 flex-col border-r border-neutral-800 bg-neutral-900/40 lg:flex">
+    <aside className="hidden w-56 shrink-0 animate-fade-in flex-col border-r border-neutral-800 bg-neutral-900/40 lg:flex">
       <div className="flex items-center gap-2 px-5 py-6">
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500 text-sm font-bold text-white">
           M
@@ -65,6 +65,29 @@ export default function Sidebar({ active, onChange }) {
           })}
         </ul>
       </nav>
+
+      <div className="border-t border-neutral-800 px-3 py-3">
+        <button
+          type="button"
+          onClick={onLogout}
+          className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-neutral-400 transition hover:bg-neutral-900 hover:text-neutral-200"
+        >
+          <svg
+            className="h-4.5 w-4.5 shrink-0"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M18 12H8.25m9.75 0-3-3m3 3-3 3"
+            />
+          </svg>
+          Sair
+        </button>
+      </div>
     </aside>
   )
 }
