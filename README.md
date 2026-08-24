@@ -1,16 +1,45 @@
-# React + Vite
+# Minha Carteira
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Painel pessoal para acompanhar uma carteira de ações e FIIs da B3: cotações em tempo real, alocação por ativo, lucro/prejuízo e importação/backup dos seus dados — tudo rodando no navegador, sem servidor ou conta.
 
-Currently, two official plugins are available:
+## Funcionalidades
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Início** — visão geral da carteira: patrimônio total, desempenho, maiores posições, alocação por ativo (ações e FIIs) e gráfico de lucro/prejuízo por ativo.
+- **Carteira** — cadastro de posições (ticker, quantidade, preço médio), separadas em abas de Ações e FIIs. A classificação é automática, baseada na cotação de cada ativo.
+- **Cotações em tempo real** via [brapi.dev](https://brapi.dev), atualizadas a cada 10 minutos ou sob demanda.
+- **Importação em massa** de extratos (CSV, TXT colado ou Excel), com detecção automática de colunas.
+- **Backup/restauração** da carteira em um arquivo `.json`.
+- Tudo fica salvo no `localStorage` do navegador — nenhum dado sai da sua máquina além das cotações consultadas na brapi.dev.
 
-## React Compiler
+## Rodando localmente
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Pré-requisitos: Node.js 18+.
 
-## Expanding the Oxlint configuration
+```bash
+npm install
+cp .env.example .env
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+Edite o `.env` e adicione um token gratuito da [brapi.dev](https://brapi.dev/dashboard) em `VITE_BRAPI_TOKEN` (necessário para buscar cotações).
+
+```bash
+npm run dev
+```
+
+Abre em `http://localhost:5173`.
+
+## Scripts
+
+| Comando           | O que faz                          |
+| ------------------ | ----------------------------------- |
+| `npm run dev`       | inicia o servidor de desenvolvimento |
+| `npm run build`     | build de produção (`dist/`)         |
+| `npm run preview`   | serve o build de produção localmente |
+| `npm run lint`      | roda o oxlint                       |
+
+## Stack
+
+- [React](https://react.dev) + [Vite](https://vitejs.dev)
+- [Tailwind CSS](https://tailwindcss.com)
+- [brapi.dev](https://brapi.dev) para cotações da B3
+- `read-excel-file` para importação de planilhas `.xlsx`
