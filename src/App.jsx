@@ -83,7 +83,7 @@ function App() {
                 >
                   brapi.dev
                 </a>
-                , atualizando a cada 10 minutos.
+                . Atualiza ao abrir a página ou no botão "Atualizar agora".
               </p>
             </div>
             <div className="flex items-center gap-3 text-xs text-neutral-500">

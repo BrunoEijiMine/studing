@@ -6,7 +6,7 @@ Painel pessoal para acompanhar uma carteira de ações e FIIs da B3: cotações 
 
 - **Início** — visão geral da carteira: patrimônio total, desempenho, maiores posições, alocação por ativo (ações e FIIs) e gráfico de lucro/prejuízo por ativo.
 - **Carteira** — cadastro de posições (ticker, quantidade, preço médio), separadas em abas de Ações e FIIs. A classificação é automática, baseada na cotação de cada ativo.
-- **Cotações em tempo real** via [brapi.dev](https://brapi.dev), atualizadas a cada 10 minutos ou sob demanda.
+- **Cotações em tempo real** via [brapi.dev](https://brapi.dev), buscadas ao abrir a página e sob demanda (sem polling automático em segundo plano, pra não estourar o limite de requests do plano gratuito).
 - **Importação em massa** de extratos (CSV, TXT colado ou Excel), com detecção automática de colunas.
 - **Backup/restauração** da carteira em um arquivo `.json`.
 - Tudo fica salvo no `localStorage` do navegador — nenhum dado sai da sua máquina além das cotações consultadas na brapi.dev.

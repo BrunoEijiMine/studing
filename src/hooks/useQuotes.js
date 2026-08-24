@@ -1,8 +1,7 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 const BRAPI_URL = 'https://brapi.dev/api/v2/stocks/quote'
 const BRAPI_TOKEN = import.meta.env.VITE_BRAPI_TOKEN
-const POLL_INTERVAL_MS = 10 * 60_000
 
 async function fetchOne(ticker) {
   const url = new URL(BRAPI_URL)
@@ -67,13 +66,11 @@ export function useQuotes(tickers) {
     setLoading(false)
   }, [tickersKey])
 
-  const intervalRef = useRef(null)
-
+  // busca só ao carregar a página (ou quando os tickers mudam) — sem polling
+  // automático, pra não estourar o limite de requests da brapi.dev enquanto a
+  // aba fica aberta. Atualização manual via `refresh`.
   useEffect(() => {
     fetchQuotes()
-
-    intervalRef.current = setInterval(fetchQuotes, POLL_INTERVAL_MS)
-    return () => clearInterval(intervalRef.current)
   }, [fetchQuotes])
 
   return { quotes, errors, lastUpdated, loading, refresh: fetchQuotes }
