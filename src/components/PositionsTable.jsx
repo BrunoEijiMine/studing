@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { formatCurrency, formatPercent } from '../lib/format'
-import { computeTotals, groupByAssetType } from '../lib/portfolio'
+import { computeTotals } from '../lib/portfolio'
 
 function ChangeBadge({ value }) {
   if (value === null || value === undefined || Number.isNaN(value)) {
@@ -15,16 +15,11 @@ function ChangeBadge({ value }) {
   )
 }
 
-function PositionsSection({ title, rows, editingId, draft, setDraft, startEdit, cancelEdit, saveEdit, onRemove }) {
-  if (rows.length === 0) return null
-
+function PositionsSection({ rows, editingId, draft, setDraft, startEdit, cancelEdit, saveEdit, onRemove }) {
   const subtotal = computeTotals(rows)
 
   return (
     <div className="overflow-x-auto rounded-2xl border border-neutral-800">
-      <div className="bg-neutral-900/70 px-4 py-3 text-xs font-semibold uppercase tracking-wide text-neutral-400">
-        {title}
-      </div>
       <table className="w-full min-w-[760px] text-left text-sm">
         <thead className="border-b border-neutral-800 text-xs uppercase tracking-wide text-neutral-500">
           <tr>
@@ -182,7 +177,7 @@ function PositionsSection({ title, rows, editingId, draft, setDraft, startEdit, 
   )
 }
 
-export default function PositionsTable({ rows, onRemove, onUpdate }) {
+export default function PositionsTable({ rows, emptyMessage, onRemove, onUpdate }) {
   const [editingId, setEditingId] = useState(null)
   const [draft, setDraft] = useState({ quantity: '', avgPrice: '' })
 
@@ -208,18 +203,21 @@ export default function PositionsTable({ rows, onRemove, onUpdate }) {
   if (rows.length === 0) {
     return (
       <p className="rounded-2xl border border-dashed border-neutral-800 p-10 text-center text-sm text-neutral-500">
-        Nenhuma posição adicionada ainda. Use o formulário acima pra começar.
+        {emptyMessage ?? 'Nenhuma posição adicionada ainda. Use o formulário acima pra começar.'}
       </p>
     )
   }
 
-  const { acoes, fiis } = groupByAssetType(rows)
-  const sectionProps = { editingId, draft, setDraft, startEdit, cancelEdit, saveEdit, onRemove }
-
   return (
-    <div className="flex flex-col gap-4">
-      <PositionsSection title="Ações" rows={acoes} {...sectionProps} />
-      <PositionsSection title="Fundos Imobiliários (FIIs)" rows={fiis} {...sectionProps} />
-    </div>
+    <PositionsSection
+      rows={rows}
+      editingId={editingId}
+      draft={draft}
+      setDraft={setDraft}
+      startEdit={startEdit}
+      cancelEdit={cancelEdit}
+      saveEdit={saveEdit}
+      onRemove={onRemove}
+    />
   )
 }

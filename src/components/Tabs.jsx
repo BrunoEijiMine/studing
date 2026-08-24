@@ -1,6 +1,6 @@
 const TABS = [
+  { id: 'inicio', label: 'Início' },
   { id: 'carteira', label: 'Carteira' },
-  { id: 'dividendos', label: 'Dividendos' },
 ]
 
 export default function Tabs({ active, onChange }) {
