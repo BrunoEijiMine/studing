@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import AllocationChart from './components/AllocationChart'
+import AssetTypePieChart from './components/AssetTypePieChart'
 import BackupControls from './components/BackupControls'
 import HeroBalance from './components/HeroBalance'
 import ImportPositions from './components/ImportPositions'
@@ -18,6 +19,10 @@ import { useQuotes } from './hooks/useQuotes'
 import { recordSnapshot } from './lib/history'
 import { computeRows, computeTotals, groupByAssetType } from './lib/portfolio'
 
+// BOVA11 (ETF que replica o Ibovespa) usado como benchmark — dá pra buscar pela
+// mesma API de cotação de ações, sem precisar de um endpoint de índice separado.
+const BENCHMARK_TICKERS = ['BOVA11']
+
 function App() {
   const auth = useAuth()
   const [tab, setTab] = useState('inicio')
@@ -31,6 +36,9 @@ function App() {
   // não busca cotação enquanto a carteira ainda tá trancada
   const { quotes, errors, lastUpdated, loading, refresh } = useQuotes(
     auth.isUnlocked ? tickers : []
+  )
+  const { quotes: benchmarkQuotes, lastUpdated: benchmarkUpdated } = useQuotes(
+    auth.isUnlocked ? BENCHMARK_TICKERS : []
   )
 
   const rows = useMemo(() => computeRows(positions, quotes, errors), [positions, quotes, errors])
@@ -52,8 +60,9 @@ function App() {
   // pra montar o histórico de evolução ao longo do tempo
   useEffect(() => {
     if (!lastUpdated || totals.invested <= 0) return
-    setHistory((prev) => recordSnapshot(prev, totals))
-  }, [lastUpdated])
+    const benchmarkPrice = benchmarkQuotes.BOVA11?.regularMarketPrice ?? null
+    setHistory((prev) => recordSnapshot(prev, totals, benchmarkPrice))
+  }, [lastUpdated, benchmarkUpdated])
 
   const addPosition = (position) =>
     setPositions((prev) => {
@@ -149,7 +158,8 @@ function App() {
                 </div>
 
                 {rows.length > 0 && (
-                  <div className="mb-6 grid animate-fade-in-up gap-4 [animation-delay:220ms] lg:grid-cols-2">
+                  <div className="mb-6 grid animate-fade-in-up gap-4 [animation-delay:220ms] lg:grid-cols-3">
+                    <AssetTypePieChart acaoRows={acaoRows} fiiRows={fiiRows} hidden={hideValues} />
                     <AllocationChart
                       rows={acaoRows}
                       title="Alocação — Ações"
