@@ -4,6 +4,7 @@ import BackupControls from './components/BackupControls'
 import HeroBalance from './components/HeroBalance'
 import ImportPositions from './components/ImportPositions'
 import LoginGate from './components/LoginGate'
+import NetWorthChart from './components/NetWorthChart'
 import PerformanceChart from './components/PerformanceChart'
 import PerformanceOverview from './components/PerformanceOverview'
 import PositionForm from './components/PositionForm'
@@ -14,6 +15,7 @@ import TopHoldings from './components/TopHoldings'
 import { useAuth } from './hooks/useAuth'
 import { useLocalStorage } from './hooks/useLocalStorage'
 import { useQuotes } from './hooks/useQuotes'
+import { recordSnapshot } from './lib/history'
 import { computeRows, computeTotals, groupByAssetType } from './lib/portfolio'
 
 function App() {
@@ -24,6 +26,7 @@ function App() {
   const [showImport, setShowImport] = useState(false)
   const [positions, setPositions] = useLocalStorage('studing:positions', [])
   const [hideValues, setHideValues] = useLocalStorage('studing:hideValues', false)
+  const [history, setHistory] = useLocalStorage('studing:history', [])
   const tickers = useMemo(() => positions.map((p) => p.ticker), [positions])
   // não busca cotação enquanto a carteira ainda tá trancada
   const { quotes, errors, lastUpdated, loading, refresh } = useQuotes(
@@ -44,6 +47,13 @@ function App() {
     setPositionsSubTab(row.assetType === 'fii' ? 'fiis' : 'acoes')
     setPendingTicker(null)
   }, [pendingTicker, rows])
+
+  // registra um snapshot do patrimônio a cada atualização de cotação bem-sucedida,
+  // pra montar o histórico de evolução ao longo do tempo
+  useEffect(() => {
+    if (!lastUpdated || totals.invested <= 0) return
+    setHistory((prev) => recordSnapshot(prev, totals))
+  }, [lastUpdated])
 
   const addPosition = (position) =>
     setPositions((prev) => {
@@ -226,6 +236,12 @@ function App() {
                   />
                 </div>
               </>
+            )}
+
+            {tab === 'historico' && (
+              <div className="animate-fade-in-up">
+                <NetWorthChart history={history} />
+              </div>
             )}
           </div>
         </div>

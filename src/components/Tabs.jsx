@@ -1,6 +1,7 @@
 const TABS = [
   { id: 'inicio', label: 'Início' },
   { id: 'carteira', label: 'Carteira' },
+  { id: 'historico', label: 'Histórico' },
 ]
 
 export default function Tabs({ active, onChange }) {
