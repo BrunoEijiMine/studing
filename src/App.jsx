@@ -23,6 +23,7 @@ function App() {
   const [pendingTicker, setPendingTicker] = useState(null)
   const [showImport, setShowImport] = useState(false)
   const [positions, setPositions] = useLocalStorage('studing:positions', [])
+  const [hideValues, setHideValues] = useLocalStorage('studing:hideValues', false)
   const tickers = useMemo(() => positions.map((p) => p.ticker), [positions])
   // não busca cotação enquanto a carteira ainda tá trancada
   const { quotes, errors, lastUpdated, loading, refresh } = useQuotes(
@@ -121,12 +122,16 @@ function App() {
 
             {tab === 'inicio' && (
               <>
-                <div className="mb-6 grid gap-4 lg:grid-cols-3">
+                <div className="mb-6 grid items-stretch gap-4 lg:grid-cols-3">
                   <div className="animate-fade-in-up">
-                    <HeroBalance totals={totals} />
+                    <HeroBalance
+                      totals={totals}
+                      hidden={hideValues}
+                      onToggleHidden={() => setHideValues((prev) => !prev)}
+                    />
                   </div>
                   <div className="animate-fade-in-up [animation-delay:80ms]">
-                    <PerformanceOverview totals={totals} />
+                    <PerformanceOverview totals={totals} hidden={hideValues} />
                   </div>
                   <div className="animate-fade-in-up [animation-delay:160ms]">
                     <TopHoldings rows={rows} />

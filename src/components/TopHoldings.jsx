@@ -2,12 +2,10 @@ import { buildSegments } from '../lib/allocation'
 import { formatPercent } from '../lib/format'
 
 export default function TopHoldings({ rows, limit = 5 }) {
-  const segments = buildSegments(rows)
-    .filter((seg) => seg.label !== 'Outros')
-    .slice(0, limit)
+  const segments = buildSegments(rows).slice(0, limit)
 
   return (
-    <div className="rounded-2xl border border-neutral-800 bg-neutral-900/50 p-5">
+    <div className="h-full rounded-2xl border border-neutral-800 bg-neutral-900/50 p-5">
       <h3 className="text-sm font-semibold text-neutral-100">Maiores posições</h3>
       <p className="text-xs text-neutral-500">por valor atual na carteira</p>
 

@@ -1,9 +1,13 @@
-// FIIs sempre trazem esse texto no nome longo da cotação; ações "unit" (SANB11,
-// TAEE11...) também terminam em 11 mas não têm esse texto, então dá pra
-// diferenciar sem precisar de outra chamada de API.
+// Fundos (FIIs, FIAGROs, ETFs...) sempre trazem "fundo" ou "fiagro" no nome
+// longo da cotação; ações "unit" (SANB11, TAEE11...) também terminam em 11
+// mas não têm essas palavras, então dá pra diferenciar sem precisar de outra
+// chamada de API. Antes o regex exigia a frase exata "fundo de investimento
+// imobiliário", o que deixava FIAGROs (ex: "Kinea Credito Agro Fiagro
+// Imobiliario") e ETFs (ex: "iShares Ibovespa Fundo de Indice") caírem em
+// "acao" por não usarem essa frase específica.
 function classifyAssetType(quote) {
   if (!quote?.longName) return null
-  return /fundo de investimento imobili[aá]rio/i.test(quote.longName) ? 'fii' : 'acao'
+  return /fundo|fiagro/i.test(quote.longName) ? 'fii' : 'acao'
 }
 
 export function computeRows(positions, quotes, errors) {
